@@ -1442,7 +1442,7 @@ STEPPER_CURRENT_CONTROL
 #endif
 
 
-#if MOTHERBOARD == 301
+#if MOTHERBOARD == 301  //this is the the board in the printer
 #define KNOWN_BOARD
 /*****************************************************************
 * RAMBo Pin Assignments

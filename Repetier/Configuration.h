@@ -49,29 +49,7 @@ To override EEPROM settings with config settings, set EEPROM_MODE 0
 #define NUM_EXTRUDER 1
 
 //// The following define selects which electronics board you have. Please choose the one that matches your setup
-// Gen3 PLUS for RepRap Motherboard V1.2 = 21
-// MEGA/RAMPS up to 1.2       = 3
-// RAMPS 1.3/RAMPS 1.4        = 33
-// Azteeg X3                  = 34
-// Gen6                       = 5
-// Gen6 deluxe                = 51
-// Sanguinololu up to 1.1     = 6
-// Sanguinololu 1.2 and above = 62
-// Melzi board                = 63  // Define REPRAPPRO_HUXLEY if you have one for correct HEATER_1_PIN assignment!
-// Gen7 1.1 till 1.3.x        = 7
-// Gen7 1.4.1 and later       = 71
-// Sethi 3D_1                 = 72
-// Teensylu (at90usb)         = 8 // requires Teensyduino
-// Printrboard (at90usb)      = 9 // requires Teensyduino
-// Foltyn 3D Master           = 12
-// MegaTronics 1.0            = 70
-// Megatronics 2.0            = 701
-// RUMBA                      = 80  // Get it from reprapdiscount
-// FELIXprinters              = 101
 // Rambo                      = 301
-// PiBot for Repetier V1.0-1.3= 314
-// PiBot for Repetier V1.4    = 315
-// Sanguish Beta              = 501
 
 #define MOTHERBOARD 301
 
@@ -165,25 +143,6 @@ Overridden if EEPROM activated.*/
 #define EXT0_Y_OFFSET 0 //Removed TT
 // for skeinforge 40 and later, steps to pull the plasic 1 mm inside the extruder, not out.  Overridden if EEPROM activated.
 #define EXT0_STEPS_PER_MM 92.4 // EZStruder //Removed TT
-// What type of sensor is used?
-// 1 is 100k thermistor (Epcos B57560G0107F000 - RepRap-Fab.org and many other)
-// 2 is 200k thermistor
-// 3 is mendel-parts thermistor (EPCOS G550)
-// 4 is 10k thermistor
-// 8 is ATC Semitec 104GT-2
-// 5 is userdefined thermistor table 0
-// 6 is userdefined thermistor table 1
-// 7 is userdefined thermistor table 2
-// 50 is userdefined thermistor table 0 for PTC thermistors
-// 51 is userdefined thermistor table 0 for PTC thermistors
-// 52 is userdefined thermistor table 0 for PTC thermistors
-// 60 is AD8494, AD8495, AD8496 or AD8497 (5mV/degC and 1/4 the price of AD595 but only MSOT_08 package)
-// 97 Generic thermistor table 1
-// 98 Generic thermistor table 2
-// 99 Generic thermistor table 3
-// 100 is AD595
-// 101 is MAX6675
-// 102 is MAX31855
 #define EXT0_TEMPSENSOR_TYPE 97 //Removed TT
 // Analog input pin for reading temperatures or pin enabling SS for MAX6675
 #define EXT0_TEMPSENSOR_PIN TEMP_0_PIN //Removed TT

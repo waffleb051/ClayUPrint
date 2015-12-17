@@ -62,12 +62,12 @@ Implemented Codes
 
 RepRap M Codes
 
-- M104 - Set extruder target temp
-- M105 - Read current temp
-- M106 - Fan on
-- M107 - Fan off
-- M109 - Wait for extruder current temp to reach target temp.
-- M114 - Display current position
+- M104 - Set extruder target tempn --Need to delete
+- M105 - Read current temp --Need to delete
+- M106 - Fan on --Maybe keep for valve
+- M107 - Fan off --Maybe keep for valve
+- M109 - Wait for extruder current temp to reach target temp. --Need to delete
+- M114 - Display current position --Keep
 
 Custom M Codes
 

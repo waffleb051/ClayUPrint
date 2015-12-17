@@ -134,44 +134,6 @@ void Commands::printCurrentPosition()
     //Com::printF(PSTR("OffX:"),Printer::offsetX); // to debug offset handling
     //Com::printFLN(PSTR(" OffY:"),Printer::offsetY);
 }
-void Commands::printTemperatures(bool showRaw)
-{
-    float temp = Extruder::current->tempControl.currentTemperatureC;
-#if HEATED_BED_SENSOR_TYPE==0
-    Com::printF(Com::tTColon,temp);
-#else
-    Com::printF(Com::tTColon,temp);
-    Com::printF(Com::tSpaceBColon,Extruder::getHeatedBedTemperature());
-#if HAVE_HEATED_BED
-    if(showRaw)
-    {
-        Com::printF(Com::tSpaceRaw,(int)NUM_EXTRUDER);
-        Com::printF(Com::tColon,(1023<<(2-ANALOG_REDUCE_BITS))-heatedBedController.currentTemperature);
-    }
-    Com::printF(Com::tSpaceBAtColon,(pwm_pos[heatedBedController.pwmIndex])); // Show output of autotune when tuning!
-#endif
-#endif
-#ifdef TEMP_PID
-    Com::printF(Com::tSpaceAtColon,(autotuneIndex==255?pwm_pos[Extruder::current->id]:pwm_pos[autotuneIndex])); // Show output of autotune when tuning!
-#endif
-#if NUM_EXTRUDER>1
-    for(uint8_t i=0; i<NUM_EXTRUDER; i++)
-    {
-        Com::printF(Com::tSpaceT,(int)i);
-        Com::printF(Com::tColon,extruder[i].tempControl.currentTemperatureC);
-#ifdef TEMP_PID
-        Com::printF(Com::tSpaceAt,(int)i);
-        Com::printF(Com::tColon,(pwm_pos[extruder[i].tempControl.pwmIndex])); // Show output of autotune when tuning!
-#endif
-        if(showRaw)
-        {
-            Com::printF(Com::tSpaceRaw,(int)i);
-            Com::printF(Com::tColon,(1023<<(2-ANALOG_REDUCE_BITS))-extruder[i].tempControl.currentTemperature);
-        }
-    }
-#endif
-    Com::println();
-}
 void Commands::changeFeedrateMultiply(int factor)
 {
     if(factor<25) factor=25;
@@ -862,17 +824,7 @@ void Commands::executeGCode(GCode *com)
                     Extruder::setTemperatureForExtruder(com->S,Extruder::current->id,com->hasF() && com->F>0);
             }
 #endif
-            break;
-        case 140: // M140 set bed temp
-            if(reportTempsensorError()) break;
-            previousMillisCmd = HAL::timeInMilliseconds();
-            if(Printer::debugDryrun()) break;
-            if (com->hasS()) Extruder::setHeatedBedTemperature(com->S,com->hasF() && com->F>0);
-            break;
-        case 105: // M105  get temperature. Always returns the current temperature, doesn't wait until move stopped
-            printTemperatures(com->hasX());
-            break;
-        case 109: // M109 - Wait for extruder heater to reach target.
+			break;
 #if NUM_EXTRUDER>0
         {
             if(reportTempsensorError()) break;
@@ -1388,14 +1340,8 @@ modifying code below to shut off heaters, home the machine to the top  (for delt
 
 void Commands::emergencyStop()
 {
-//#if defined(KILL_METHOD) && KILL_METHOD==1
-    //HAL::resetHardware();
-//#else
-    //BEGIN_INTERRUPT_PROTECTED
-    //HAL::forbidInterrupts(); // Don't allow interrupts to do their work
-    //kill(false);
     Extruder::manageTemperatures();
-    for(uint8_t i=0; i<NUM_EXTRUDER+3; i++)
+    for(uint8_t i=0; i<NUM_EXTRUDER+1; i++)
         pwm_pos[i] = 0;
     pwm_pos[0] = pwm_pos[NUM_EXTRUDER] = pwm_pos[NUM_EXTRUDER+1] = pwm_pos[NUM_EXTRUDER+2]=0;
 #if EXT0_HEATER_PIN>-1
@@ -1404,27 +1350,6 @@ void Commands::emergencyStop()
 #if defined(EXT1_HEATER_PIN) && EXT1_HEATER_PIN>-1 && NUM_EXTRUDER>1
     WRITE(EXT1_HEATER_PIN,0);
 #endif
-#if defined(EXT2_HEATER_PIN) && EXT2_HEATER_PIN>-1 && NUM_EXTRUDER>2
-    WRITE(EXT2_HEATER_PIN,0);
-#endif
-#if defined(EXT3_HEATER_PIN) && EXT3_HEATER_PIN>-1 && NUM_EXTRUDER>3
-    WRITE(EXT3_HEATER_PIN,0);
-#endif
-#if defined(EXT4_HEATER_PIN) && EXT4_HEATER_PIN>-1 && NUM_EXTRUDER>4
-    WRITE(EXT4_HEATER_PIN,0);
-#endif
-#if defined(EXT5_HEATER_PIN) && EXT5_HEATER_PIN>-1 && NUM_EXTRUDER>5
-    WRITE(EXT5_HEATER_PIN,0);
-#endif
-#if FAN_PIN>-1
-    WRITE(FAN_PIN,0);
-#endif
-#if HEATED_BED_HEATER_PIN>-1
-    WRITE(HEATED_BED_HEATER_PIN,0);
-#endif
-
-
-
     //while(1) {}    WE DONT WANT TO HANG ON THE WHILE LOOP, we want to reset the board and be ready to start again, after shutting off heats and homing the machine
     //END_INTERRUPT_PROTECTED
   

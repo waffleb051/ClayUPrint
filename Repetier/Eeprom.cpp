@@ -108,7 +108,6 @@ void EEPROM::restoreEEPROMSettingsFromConfiguration()
     e = &extruder[0];
     e->stepsPerMM = EXT0_STEPS_PER_MM;
     e->maxFeedrate = EXT0_MAX_FEEDRATE;
-    e->maxStartFeedrate = EXT0_MAX_START_FEEDRATE;
     e->maxAcceleration = EXT0_MAX_ACCELERATION;
     e->tempControl.heatManager = EXT0_HEAT_MANAGER;
 #ifdef TEMP_PID
