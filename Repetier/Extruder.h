@@ -9,10 +9,9 @@
 
 // Updates the temperature of all extruders and heated bed if it's time.
 // Toggels the heater power if necessary.
-extern bool reportTempsensorError(); ///< Report defect sensors
 extern uint8_t manageMonitor;
 
-#define TEMPERATURE_CONTROLLER_FLAG_ALARM 1
+//#define TEMPERATURE_CONTROLLER_FLAG_ALARM 0
 /** TemperatureController manages one heater-temperature sensore loop. You can have up to
 4 loops allowing pid/bang bang for up to 3 extruder and the heated bed.
 
@@ -25,10 +24,10 @@ class TemperatureController
     uint8_t sensorPin; ///< Pin to read extruder temperature.
     int16_t currentTemperature; ///< Currenttemperature value read from sensor.
     int16_t targetTemperature; ///< Target temperature value in units of sensor.
-    float currentTemperatureC; ///< Current temperature in degC.
-    float targetTemperatureC; ///< Target temperature in degC.
+    float currentTemperatureC = 0.0; ///< Current temperature in degC.
+    float targetTemperatureC = 0.0; ///< Target temperature in degC.
     uint32_t lastTemperatureUpdate; ///< Time in millis of the last temperature update.
-    int8_t heatManager; ///< How is temperature controled. 0 = on/off, 1 = PID-Control, 3 = deat time control
+    int8_t heatManager = 0; ///< How is temperature controled. 0 = on/off, 1 = PID-Control, 3 = deat time control
 #ifdef TEMP_PID
     float tempIState; ///< Temp. var. for PID computation.
     uint8_t pidDriveMax; ///< Used for windup in PID calculation.
@@ -44,14 +43,11 @@ class TemperatureController
 #endif
     uint8_t flags;
 
-    void setTargetTemperature(float target);
-    void updateCurrentTemperature();
-    void updateTempControlVars();
-    inline bool isAlarm() {return flags & TEMPERATURE_CONTROLLER_FLAG_ALARM;}
-    inline void setAlarm(bool on) {if(on) flags |= TEMPERATURE_CONTROLLER_FLAG_ALARM; else flags &= ~TEMPERATURE_CONTROLLER_FLAG_ALARM;}
-#ifdef TEMP_PID
-    void autotunePID(float temp,uint8_t controllerId,bool storeResult);
-#endif
+
+//    inline bool isAlarm() {return flags & TEMPERATURE_CONTROLLER_FLAG_ALARM;}
+//    //inline void setAlarm(bool on) {if(on) flags |= TEMPERATURE_CONTROLLER_FLAG_ALARM; else flags &= ~TEMPERATURE_CONTROLLER_FLAG_ALARM;}
+//#ifdef TEMP_PID
+//#endif
 };
 
 class Extruder;
@@ -64,7 +60,7 @@ current state variables, like current temperature, feeder position etc.
 */
 class Extruder   // Size: 12*1 Byte+12*4 Byte+4*2Byte = 68 Byte
 {
-    public:
+	public:
     static Extruder *current;
 #if FEATURE_DITTO_PRINTING
     static uint8_t dittoMode;
@@ -80,7 +76,7 @@ class Extruder   // Size: 12*1 Byte+12*4 Byte+4*2Byte = 68 Byte
 //  uint8_t invertDir; ///< 1 if the direction of the extruder should be inverted.
     float maxFeedrate;      ///< Maximum feedrate in mm/s.
     float maxAcceleration;  ///< Maximum acceleration in mm/s^2.
-    float maxStartFeedrate; ///< Maximum start feedrate in mm/s.
+    float maxStartFeedrate; ///< Maximum start feedrate in mm/s.//
     int32_t extrudePosition;   ///< Current extruder position in steps.
     int16_t watchPeriod;        ///< Time in seconds, a M109 command will wait to stabalize temperature
     int16_t waitRetractTemperature; ///< Temperature to retract the filament when waiting for heatup
